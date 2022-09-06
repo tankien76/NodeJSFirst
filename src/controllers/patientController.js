@@ -5,7 +5,7 @@ let postBookAppointment = async (req, res) => {
         return res.status(200).json(infor)
     } catch (e) {
         console.log(e)
-        return res(200).json({
+        return res.status(200).json({
             errCode: -1,
             errMesage: 'Error from the server'
         })
@@ -18,7 +18,7 @@ let postVerifyBookAppointment = async (req, res) => {
         return res.status(200).json(infor)
     } catch (e) {
         console.log(e)
-        return res(200).json({
+        return res.status(200).json({
             errCode: -1,
             errMesage: 'Error from the server'
         })
