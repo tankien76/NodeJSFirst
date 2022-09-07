@@ -11,12 +11,18 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      //n-n relationship
       User.belongsTo(models.Allcode, { foreignKey: 'positionId', targetKey: 'keyMap', as: 'positionData' })
       User.belongsTo(models.Allcode, { foreignKey: 'gender', targetKey: 'keyMap', as: 'genderData' })
+
+      //1-1 relationship
       User.hasOne(models.Markdown, { foreignKey: 'doctorId' })
       User.hasOne(models.Doctor_infor, { foreignKey: 'doctorId' })
 
+      //1-n relationship
       User.hasMany(models.Schedule, { foreignKey: 'doctorId', as: 'doctorData' })
+      User.hasMany(models.Booking, { foreignKey: 'patientId', as: 'patientData' })
+
     }
   };
   User.init({
