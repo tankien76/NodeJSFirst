@@ -59,7 +59,7 @@ let getDetailSpecialtyById = (inputId, location) => {
             } else {
                 let data = await db.Specialty.findOne({
                     where: { id: inputId },
-                    attributes: ['descriptionHTML', 'descriptionMarkdown']
+                    attributes: ['descriptionHTML', 'descriptionMarkdown', 'image']
                 })
 
                 if (data) {
@@ -93,9 +93,45 @@ let getDetailSpecialtyById = (inputId, location) => {
         }
     })
 }
+let handleEditSpecialty = (data) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            if (!data.id || !data.descriptionMarkdown || !data.descriptionHTML || !data.image) {
+                resolve({
+                    errCode: 2,
+                    message: 'Missing required parameters!'
+                })
+            }
+            let specialty = await db.Specialty.findOne({
+                where: { id: data.id },
+                raw: false
+            })
+            if (specialty) {
+                specialty.descriptionMarkdown = data.descriptionMarkdown;
+                specialty.descriptionHTML = data.descriptionHTML;
+                specialty.image = data.image;
+                await specialty.save();
+
+                resolve({
+                    errCode: 0,
+                    message: 'Updated specialty succeeds!'
+                })
+
+            } else {
+                resolve({
+                    errCode: 1,
+                    errMessage: 'Specialty not found!'
+                })
+            }
+        } catch (e) {
+            reject(e);
+        }
+    })
+}
 
 module.exports = {
     createSpecialty: createSpecialty,
     getAllSpecialty: getAllSpecialty,
-    getDetailSpecialtyById: getDetailSpecialtyById
+    getDetailSpecialtyById: getDetailSpecialtyById,
+    handleEditSpecialty: handleEditSpecialty
 }
