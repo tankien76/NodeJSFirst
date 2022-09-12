@@ -459,6 +459,41 @@ let sendRemedy = (data) => {
     })
 }
 
+let getAllDoctorSearch = () => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            let doctors = await db.User.findAll({
+                where: { roleId: "R2" },
+                attributes: {
+                    exclude: ['password']
+                },
+                include: [
+                    {
+                        model: db.Doctor_infor,
+                        attributes: {
+                            exclude: ['id']
+                        },
+                        include: [
+                            { model: db.Specialty, as: 'specialtyData', attributes: ['name'] },
+                        ]
+                    },
+                ],
+                raw: true,
+                nest: true
+            })
+
+            if (!doctors) doctors = {};
+
+            resolve({
+                errCode: 0,
+                data: doctors
+            })
+        } catch (e) {
+            reject(e)
+        }
+    })
+}
+
 module.exports = {
     getTopDoctorHome: getTopDoctorHome,
     getAllDoctor: getAllDoctor,
@@ -469,5 +504,6 @@ module.exports = {
     getExtraInforById: getExtraInforById,
     getProfileDoctorById: getProfileDoctorById,
     getListPatient: getListPatient,
-    sendRemedy: sendRemedy
+    sendRemedy: sendRemedy,
+    getAllDoctorSearch: getAllDoctorSearch
 }
